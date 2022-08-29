@@ -1,0 +1,20 @@
+GIC(Generic Interrupt Controller) -> 우선순위를 위해 ( interrupt 선의 개수는 적은데 많은 이넡럽트가 있으니)
+
+(GIC = Distributor + CPU interface 둘다 하드웨어) -> IRQ, FIQ 를 통해 정보를 보냄
+1. 여러개의 IO interrupt 존재 (Timer, UART, GPIO ,,,)
+2. Distributor 에서 어느 CPU 에 줄건지 우선순위에 따라 가름
+어느 CPU, 어떤 우선순위
+3. CPU Interface 은 PMR, IAR, EOIR 로 구성
+CPU Interface 는 CPU 개수마다 있음
+*PMR (Priority Mask Register) - 우선순위
+*IAR (Interrupt Acknowledge Register) - 어떤 device 가 interrupt 발생 시켰는지 (UART 41 번 일케)
+-> CPUID(SGI 를 발생시킨 CPU 저장), Interrupt ID 저장함 - register에
+*EOIR (End Of Interrupt Register)
+-> Interrupt 가 끝남을 알려줌 - IAR 에 저장돼 있는 device 값 전달 + 다른 interrupt 받을 준비가 됐다. (store 명령 수행)
+-> CPUID(SGI 발생 시킨 CPU 저장), EOIINTID 로 구성됨 - register에
+
+**SGI (Software Generated Interrupt)
+-> CPU 가 자기자신 혹은 다른 CPU 깨움(SIPI), 놀고있는 task 보내기 -> IPI (Inter Processor Interrupt)라고함
+-> I/O device 에 의해 생긴 interrupt 가 아닌, sw 에 의해 생성
+-> Distributor 안에 SGIR 이 있음(SGI regitser) - 할당된 ID, 어느 CPU에서 돌릴지, Target list 로 쓸건지-자기자신-자기제외모든 CPU 는 filter 로 거름
+

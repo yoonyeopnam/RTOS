@@ -72,17 +72,17 @@ void Hal_interrupt_disable(uint32_t interrupt_num)
 
 void Hal_interrupt_register_handler(InterHdlr_fptr handler, uint32_t interrupt_num)
 {
-    sHandlers[interrupt_num] = handler;
+    sHandlers[interrupt_num] = handler; /* interrupt Handler 에 대한 처리 방법 */
 }
 
 void Hal_interrupt_run_handler(void)
 {
-    uint32_t interrupt_num = GicCpu->interruptack.bits.InterruptID;
+    uint32_t interrupt_num = GicCpu->interruptack.bits.InterruptID; /*IAR 에서 읽어옴*/
 
     if (sHandlers[interrupt_num] != NULL)
     {
-        sHandlers[interrupt_num]();
+        sHandlers[interrupt_num](); /*함수 포인터 실행*/
     }
 
-    GicCpu->endofinterrupt.bits.InterruptID = interrupt_num;
+    GicCpu->endofinterrupt.bits.InterruptID = interrupt_num; /*EOIR*/
 }
